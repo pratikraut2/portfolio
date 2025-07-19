@@ -4,7 +4,7 @@ A personal developer portfolio website showcasing my skills, featured projects, 
 
 ## 🔗 Live Demo
 
-> [View My Portfolio](https://pratikraut2.github.io/portfolio/)
+> [View My Portfolio](https://portfolio-i5o0.onrender.com)
 
 ---
 
