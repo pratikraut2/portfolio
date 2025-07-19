@@ -9,3 +9,6 @@ services:
         value: portfolio.settings       # Again, replace 'portfolio' with your Django project folder name
       - key: PYTHON_VERSION
         value: 3.10
+buildCommand: |
+  pip install -r requirements.txt
+  python manage.py collectstatic --noinput
