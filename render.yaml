@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: portfolio                     # You can name it anything
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn portfolio.wsgi:application   # Replace 'portfolio' with your Django project folder name
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: portfolio.settings       # Again, replace 'portfolio' with your Django project folder name
+      - key: PYTHON_VERSION
+        value: 3.10
