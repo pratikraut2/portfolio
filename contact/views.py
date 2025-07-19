@@ -2,7 +2,8 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from django.core.mail import EmailMessage 
+from django.core.mail import send_mail, EmailMessage
+from decouple import config
 
 def home(request):
     return render(request, 'index.html')
@@ -15,30 +16,19 @@ def contact_api(request):
     message = request.data.get('message')
 
     if not all([name, email, subject, message]):
-        return Response({'success': False, 'error': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'success': False, 'error': 'All fields are required.'}, status=400)
 
+    body = f"From: {name} <{email}>\n\nSubject: {subject}\n\nMessage:\n{message}"
+    
+    mail = EmailMessage(
+        subject=subject,
+        body=body,
+        from_email=config('EMAIL_HOST_USER'),
+        to=[config('EMAIL_RECEIVER')],
+        reply_to=[email]
+    )
     try:
-        full_message = f"""
-        You received a new message from your portfolio contact form:
-
-        Name: {name}
-        Email: {email}
-        Subject: {subject}
-        Message: {message}
-        """
-
-        email_msg = EmailMessage(
-            subject=subject,
-            body=full_message,
-            from_email="pratik.raut180@gmail.com",
-            to=["pratik.raut180@gmail.com"],
-            reply_to=[email]
-        )
-        email_msg.send()
-
-        return Response({'success': True, 'message': 'Message sent successfully!'})
-
+        mail.send()
+        return Response({'success': True, 'message': 'Email sent!'})
     except Exception as e:
-        return Response({'success': False, 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
+        return Response({'success': False, 'error': str(e)}, status=500)
